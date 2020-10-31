@@ -1,0 +1,16 @@
+{
+  "name": "termux-notification-listener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "nanoid": "^3.1.16",
+    "node-ipc": "^9.1.1",
+    "termux": "^1.1.1"
+  }
+}
