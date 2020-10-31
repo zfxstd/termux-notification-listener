@@ -1,14 +1,19 @@
-const {showText} = require('./index')
+const {make, makeRun} = require('./index')
 
 async function run(){
-	await showText("Test Title", "Im ASK", {
+	const notify = make("Confirm", "Do you sure???", {
 		btn1: {
 			name: "im yes",
 			click(){
-				console.log("clickk! yepps!!!")
+				console.log("clickkKK: yepps!!!")
 			}
 		},
-		btn2: {},
+		btn2: {
+			name: "maybe?",
+			click(){
+				console.log("unsure ~_~")
+			}
+		},
 		btn3: {
 			name: "im no",
 			click(){
@@ -22,6 +27,10 @@ async function run(){
 			console.log("im tapped and removed")
 		}
 	});
-	console.log("test ok?")
+
+	notify.image("/data/data/com.termux/files/home/1.jpg");
+	await notify.run()
+
+
 }
 run()

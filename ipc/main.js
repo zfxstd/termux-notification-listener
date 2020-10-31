@@ -11,6 +11,8 @@ ipc.config.silent = true
 ipc.serve(function() {
     // console.log("IPC server started!")
     ipc.server.on('message', function(data, socket) {
+
+
         if(data.type=="button"){
 
             if(data.click && cbs["ok-"+data.click]){
@@ -22,7 +24,7 @@ ipc.serve(function() {
             }
 
             if(data.tap && cbs["tap-"+data.tap]){
-                cbs["tap-"+data.tap]
+                cbs["tap-"+data.tap]()
             }
         
         }

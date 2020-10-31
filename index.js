@@ -5,19 +5,18 @@ const path = require('path');
 
 
 const callbackPath = path.join(__dirname, "callback.js");
-const basicAction = "/data/data/com.termux/files/usr/bin/env node " + callbackPath + " "
+const basicAction = path.join(process.env["PREFIX"], "bin/env") + " node " + callbackPath + " "
 
 ipc.start();
-
-if(!termux.hasTermux){
-	return console.log("Please install Termux-API. ");
-}
 
 function formAction(args){
 	return basicAction + args.join(" ")
 }
 
-async function showText(title, ask, btnTable){
+async function makeRun(title, ask, table){
+	(await make(title, ask, table)).run()
+}
+function make(title, ask, table){
 	// todo here (some) type checks with deep-defaults or joi
 
 	let notify = termux.notification()
@@ -25,43 +24,43 @@ async function showText(title, ask, btnTable){
 		.content(ask)
 		
 
-		for (let i = 1; i < 4; i++) {		
-		
-			if(btnTable["btn"+i] && btnTable["btn"+i].name){
-				if(btnTable["btn"+i].click){
-					const randomId = random();
+	for (let i = 1; i < 4; i++) {		
+	
+		if(table["btn"+i] && table["btn"+i].name){
+			if(table["btn"+i].click){
+				const randomId = random();
 
-					ipc.register("ok-"+randomId, btnTable["btn"+i].click);
-					notify = notify["button"+i](btnTable["btn"+i].name, formAction(["--click", randomId]))
+				ipc.register("ok-"+randomId, table["btn"+i].click);
+				notify = notify["button"+i](table["btn"+i].name, formAction(["--click", randomId]))
 
-				}
 			}
-
-		};
-
-		if(btnTable.delete){
-			const randomId = random();
-
-			ipc.register("delete-"+randomId, btnTable.delete);
-			notify = notify.delete(formAction(["--delete", randomId]))
-
 		}
 
+	};
 
-		if(btnTable.tap){
-			const randomId = random();
+	if(table.delete){
+		const randomId = random();
 
-			ipc.register("tap-"+randomId, btnTable.tap);
-			notify = notify.tap(formAction(["--tap", randomId]))
-		}
+		ipc.register("delete-"+randomId, table.delete);
+		notify = notify.delete(formAction(["--delete", randomId]))
+
+	}
 
 
-		await notify.run()
+	if(table.tap){
+		const randomId = random();
+		ipc.register("tap-"+randomId, table.tap);
+		notify = notify.tap(formAction(["--tap", randomId]))
+	}
+
+
+	return notify
 
 }
 
 
 module.exports = {
-	showText,
+	make,
+	makeRun,
 	hasTemux: termux.hasTermux
 }
